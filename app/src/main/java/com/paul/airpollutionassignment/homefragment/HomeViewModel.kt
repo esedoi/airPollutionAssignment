@@ -6,25 +6,52 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.paul.airpollutionassignment.data.AirData
+import com.paul.airpollutionassignment.data.Record
 import com.paul.airpollutionassignment.data.Result
 import com.paul.airpollutionassignment.data.source.AirRepository
 import kotlinx.coroutines.launch
 
 class HomeViewModel(private val airRepository: AirRepository) : ViewModel() {
 
-    private var _airPollution = MutableLiveData<AirData>()
-    val airPollution: LiveData<AirData>
-        get() = _airPollution
+    private var _allData = MutableLiveData<List<Record>>()
+    val allData: LiveData<List<Record>>
+        get() = _allData
+
+    private var _upPollution = MutableLiveData<List<Record>>()
+    val upPollution: LiveData<List<Record>>
+        get() = _upPollution
+
+    private var _downPollution = MutableLiveData<List<Record>>()
+    val downPollution: LiveData<List<Record>>
+        get() = _downPollution
 
 
     fun getAirPollution(apiKey:String, limit:Int) {
         viewModelScope.launch {
             when (val result = airRepository.getAirPollution(apiKey, limit)) {
                 is Result.Success -> {
+                    val data = result.data
+                    val upList = mutableListOf<Record>()
+                    val downList = mutableListOf<Record>()
+                    _allData.value = data.records
 
-                    _airPollution.value = result.data ?: return@launch
+                    for(i in data.records){
+                        try {
+                            if(i.pmTwoPointFive.toInt()<10){
+                                upList.add(i)
+                            }else{
+                                downList.add(i)
+                            }
+                        }catch (e:Exception){
 
-                    Log.d("homeViewModel", "news result = ${result.data}")
+                            Log.d("homeViewModel", "e = $e ")
+                            Log.d("homeViewModel", "i = $i ")
+                        }
+
+                    }
+                    _downPollution.value = downList
+                    _upPollution.value = upList
+
                 }
                 is Result.Error -> {
                     Log.d("homeViewModel", "news result = ${result.exception}")
