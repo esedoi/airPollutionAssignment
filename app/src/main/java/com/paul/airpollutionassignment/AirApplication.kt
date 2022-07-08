@@ -14,6 +14,7 @@ class AirApplication : Application() {
         var instance: AirApplication by Delegates.notNull()
         const val LIMIT = 1000
         const val APIKEY = "cebebe84-e17d-4022-a28f-81097fda5896"
+        const val THRESHOLD = 10
     }
 
     override fun onCreate() {

@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.paul.airpollutionassignment.AirApplication
 import com.paul.airpollutionassignment.data.Record
 import com.paul.airpollutionassignment.data.Result
 import com.paul.airpollutionassignment.data.source.AirRepository
@@ -44,7 +45,7 @@ class HomeViewModel(private val airRepository: AirRepository) : ViewModel() {
 
                     for(i in data.records){
                         try {
-                            if(i.pmTwoPointFive.toInt()<10){
+                            if(i.pmTwoPointFive.toInt()<AirApplication.THRESHOLD){
                                 upList.add(i)
                             }else{
                                 downList.add(i)
