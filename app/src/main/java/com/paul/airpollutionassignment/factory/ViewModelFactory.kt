@@ -6,7 +6,7 @@ import com.paul.airpollutionassignment.data.source.AirRepository
 import com.paul.airpollutionassignment.homefragment.HomeViewModel
 
 class ViewModelFactory constructor(
-    private val repository: AirRepository
+    private val repository: AirRepository,
 ) : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T =

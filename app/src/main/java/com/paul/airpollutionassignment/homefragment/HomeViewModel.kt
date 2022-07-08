@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.paul.airpollutionassignment.data.AirData
 import com.paul.airpollutionassignment.data.Record
 import com.paul.airpollutionassignment.data.Result
 import com.paul.airpollutionassignment.data.source.AirRepository
@@ -25,9 +24,17 @@ class HomeViewModel(private val airRepository: AirRepository) : ViewModel() {
     val downPollution: LiveData<List<Record>>
         get() = _downPollution
 
+    private var _loadingComplete = MutableLiveData<Boolean>()
+    val loadingComplete: LiveData<Boolean>
+        get() = _loadingComplete
+
+
+
 
     fun getAirPollution(apiKey:String, limit:Int) {
         viewModelScope.launch {
+            _loadingComplete.value = false
+
             when (val result = airRepository.getAirPollution(apiKey, limit)) {
                 is Result.Success -> {
                     val data = result.data
@@ -49,6 +56,7 @@ class HomeViewModel(private val airRepository: AirRepository) : ViewModel() {
                         }
 
                     }
+                    _loadingComplete.value = true
                     _downPollution.value = downList
                     _upPollution.value = upList
 

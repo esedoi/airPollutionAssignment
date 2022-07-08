@@ -7,12 +7,11 @@ import com.paul.airpollutionassignment.data.source.remote.AirRemoteDataSource
 
 object ServiceLocator {
 
-    var repository: AirRepository? = null
+    private var repository: AirRepository? = null
 
     fun provideRepository(context: Context): AirRepository {
         synchronized(this) {
             return repository
-                ?: repository
                 ?: createWeatherRepository(context)
         }
     }

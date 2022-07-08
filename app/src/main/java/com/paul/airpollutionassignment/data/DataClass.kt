@@ -12,22 +12,22 @@ data class AirData(
     val records: List<Record>,
     val resource_format: String,
     val resource_id: String,
-    val total: String
+    val total: String,
 )
 
 data class Extras(
-    val api_key: String
+    val api_key: String,
 )
 
 data class Links(
     val next: String,
-    val start: String
+    val start: String,
 )
 
 data class Field(
     val id: String,
     val info: Info,
-    val type: String
+    val type: String,
 )
 
 data class Record(
@@ -44,19 +44,19 @@ data class Record(
     val o3_8hr: String,
     val pm10: String,
     val pm10_avg: String,
-    @Json( name = "pm2.5") val pmTwoPointFive: String,
-    @Json( name = "pm2.5_avg") val pmTwoPointFiveAvg: String,
+    @Json(name = "pm2.5") val pmTwoPointFive: String,
+    @Json(name = "pm2.5_avg") val pmTwoPointFiveAvg: String,
     val pollutant: String,
-    val publishtime: String,
-    val siteid: String,
-    val sitename: String,
+    @Json(name = "publishtime") val publishTime: String,
+    @Json(name = "siteid") val siteId: String,
+    @Json(name = "sitename") val siteName: String,
     val so2: String,
     val so2_avg: String,
     val status: String,
     val wind_direc: String,
-    val wind_speed: String
+    val wind_speed: String,
 )
 
 data class Info(
-    val label: String
+    val label: String,
 )

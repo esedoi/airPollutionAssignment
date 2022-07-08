@@ -2,7 +2,6 @@ package com.paul.airpollutionassignment.homefragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.EditText
 import androidx.appcompat.widget.SearchView
@@ -23,9 +22,9 @@ class HomeFragment : Fragment() {
     private lateinit var _binding: FragmentHomeBinding
     private val binding get() = _binding
 
-    var allPollutionData = mutableListOf<Record>()
+    private var allPollutionData = mutableListOf<Record>()
     var displayList = mutableListOf<Record>()
-    var downPollutionData = mutableListOf<Record>()
+    private var downPollutionData = mutableListOf<Record>()
 
 
     //vertical
@@ -42,7 +41,7 @@ class HomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
 
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -59,6 +58,15 @@ class HomeFragment : Fragment() {
         binding.verticalRecycler.layoutManager = verticalManager
         binding.verticalRecycler.adapter = verticalAdapter
 
+        homeViewModel.loadingComplete.observe(viewLifecycleOwner) {
+            if (it) {
+                binding.progressBar.visibility = View.GONE
+            } else {
+                binding.progressBar.visibility = View.VISIBLE
+            }
+
+        }
+
 
         homeViewModel.allData.observe(viewLifecycleOwner) {
             allPollutionData.addAll(it)
@@ -71,7 +79,7 @@ class HomeFragment : Fragment() {
         homeViewModel.downPollution.observe(viewLifecycleOwner) {
             downPollutionData.clear()
             downPollutionData.addAll(it)
-            upDateVerticalRecycler(it)
+            updateVerticalRecycler(it)
         }
 
         setHasOptionsMenu(true)
@@ -97,7 +105,6 @@ class HomeFragment : Fragment() {
                     return true
                 }
 
-
                 override fun onMenuItemActionCollapse(p0: MenuItem?): Boolean {
                     editText.text.clear()
                     closeSearch()
@@ -115,19 +122,9 @@ class HomeFragment : Fragment() {
 
                     if (newText != null && newText.isNotEmpty()) {
                         displayList.clear()
-
-                        allPollutionData.forEach {
-                            if (it.sitename.contains(newText)) {
-                                displayList.add(it)
-                            }
-                        }
-                        if (displayList.isEmpty()) {
-                            binding.hintText.visibility = View.VISIBLE
-                            binding.hintText.text = getString(R.string.find_nothing, newText)
-                        } else {
-                            binding.hintText.visibility = View.GONE
-                        }
-                        upDateVerticalRecycler(displayList)
+                        addToDisplayList(newText)
+                        checkDisplayList(newText)
+                        updateVerticalRecycler(displayList)
 
                     } else {
                         showHint()
@@ -141,8 +138,25 @@ class HomeFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
+    private fun checkDisplayList(newText: String) {
+        if (displayList.isEmpty()) {
+            binding.hintText.visibility = View.VISIBLE
+            binding.hintText.text = getString(R.string.find_nothing, newText)
+        } else {
+            binding.hintText.visibility = View.GONE
+        }
+    }
+
+    private fun addToDisplayList(newText: String) {
+        allPollutionData.forEach {
+            if (it.siteName.contains(newText)) {
+                displayList.add(it)
+            }
+        }
+    }
+
     @SuppressLint("NotifyDataSetChanged")
-    private fun upDateVerticalRecycler(list: List<Record>) {
+    private fun updateVerticalRecycler(list: List<Record>) {
         verticalAdapter.submitList(list)
         verticalAdapter.notifyDataSetChanged()
     }
@@ -152,13 +166,13 @@ class HomeFragment : Fragment() {
         binding.hintText.visibility = View.GONE
         binding.verticalRecycler.visibility = View.VISIBLE
         binding.horizontalRecycler.visibility = View.VISIBLE
-        upDateVerticalRecycler(downPollutionData)
+        updateVerticalRecycler(downPollutionData)
     }
 
 
     private fun showHint() {
         displayList.clear()
-        upDateVerticalRecycler(displayList)
+        updateVerticalRecycler(displayList)
         binding.hintText.visibility = View.VISIBLE
         binding.hintText.text = getString(R.string.enter_site_name)
     }

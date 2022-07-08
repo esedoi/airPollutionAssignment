@@ -31,11 +31,11 @@ class HorizontalAdapter :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Record) {
-            binding.upSiteId.text = item.siteid
+            binding.upSiteId.text = item.siteId
             binding.upCounty.text = item.county
             binding.upPmTwoPointFive.text = item.pmTwoPointFive
             binding.upStatus.text = item.status
-            binding.upSiteName.text = item.sitename
+            binding.upSiteName.text = item.siteName
 
         }
     }

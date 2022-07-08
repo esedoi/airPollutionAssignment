@@ -1,16 +1,16 @@
 <resources>
-    <string name="app_name">AirPollutionAssignment</string>
+    <string name="app_name">空氣污染</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="home_fragment_label">空氣污染</string>
+    <string name="home_fragment_label">HomeFragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-    <string name="enter_site_name">輸入「站名」\n 查詢該地區空屋資訊</string>
+    <string name="good_status">良好</string>
+    <string name="do_not_go_out">狀態為「%1$s」，請不要出門</string>
+    <string name="enter_site_name">輸入「站名」\n 查詢該地區空污資訊</string>
     <string name="find_nothing">找不到「%1$s」\n 相關的空污資訊</string>
     <string name="find_site_name_hint">請輸入「站名」</string>
-
-
-
+    <string name="status_is_good">The status is good, we want to go out to have funThe status is good, we want to go out to have fun</string>
 
 
 </resources>
