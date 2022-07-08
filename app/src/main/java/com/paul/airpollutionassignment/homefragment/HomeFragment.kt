@@ -9,13 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.paul.airpollutionassignment.AirApplication
 import com.paul.airpollutionassignment.R
 import com.paul.airpollutionassignment.data.Record
 import com.paul.airpollutionassignment.databinding.FragmentHomeBinding
 import com.paul.airpollutionassignment.getVmFactory
-
-const val LIMIT = 1000
-const val APIKEY = "cebebe84-e17d-4022-a28f-81097fda5896"
 
 class HomeFragment : Fragment() {
 
@@ -46,7 +44,7 @@ class HomeFragment : Fragment() {
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-        homeViewModel.getAirPollution(APIKEY, LIMIT)
+        homeViewModel.getAirPollution(AirApplication.APIKEY, AirApplication.LIMIT)
 
         horizontalAdapter = HorizontalAdapter()
         horizontalManager = LinearLayoutManager(this.context, LinearLayoutManager.HORIZONTAL, false)

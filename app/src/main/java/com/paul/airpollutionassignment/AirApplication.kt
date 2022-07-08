@@ -12,6 +12,8 @@ class AirApplication : Application() {
 
     companion object {
         var instance: AirApplication by Delegates.notNull()
+        const val LIMIT = 1000
+        const val APIKEY = "cebebe84-e17d-4022-a28f-81097fda5896"
     }
 
     override fun onCreate() {
