@@ -20,11 +20,6 @@ class HomeFragment : Fragment() {
     private lateinit var _binding: FragmentHomeBinding
     private val binding get() = _binding
 
-    private var allPollutionData = mutableListOf<Record>()
-    var displayList = mutableListOf<Record>()
-    private var downPollutionData = mutableListOf<Record>()
-
-
     //vertical
     private lateinit var verticalAdapter: VerticalAdapter
     private var verticalManager: RecyclerView.LayoutManager? = null
@@ -62,12 +57,11 @@ class HomeFragment : Fragment() {
             } else {
                 binding.progressBar.visibility = View.VISIBLE
             }
-
         }
 
-
         homeViewModel.allData.observe(viewLifecycleOwner) {
-            allPollutionData.addAll(it)
+            homeViewModel.allPollutionData.clear()
+            homeViewModel.allPollutionData.addAll(it)
         }
 
         homeViewModel.upPollution.observe(viewLifecycleOwner) {
@@ -75,8 +69,8 @@ class HomeFragment : Fragment() {
         }
 
         homeViewModel.downPollution.observe(viewLifecycleOwner) {
-            downPollutionData.clear()
-            downPollutionData.addAll(it)
+            homeViewModel.downPollutionData.clear()
+            homeViewModel.downPollutionData.addAll(it)
             updateVerticalRecycler(it)
         }
 
@@ -99,7 +93,7 @@ class HomeFragment : Fragment() {
             searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
                 override fun onMenuItemActionExpand(p0: MenuItem?): Boolean {
                     binding.horizontalRecycler.visibility = View.GONE
-                    showHint()
+                    showDefaultHint()
                     return true
                 }
 
@@ -119,13 +113,13 @@ class HomeFragment : Fragment() {
                 override fun onQueryTextChange(newText: String?): Boolean {
 
                     if (newText != null && newText.isNotEmpty()) {
-                        displayList.clear()
+                        homeViewModel.searchDisplayList.clear()
                         addToDisplayList(newText)
                         checkDisplayList(newText)
-                        updateVerticalRecycler(displayList)
+                        updateVerticalRecycler(homeViewModel.searchDisplayList)
 
                     } else {
-                        showHint()
+                        showDefaultHint()
                     }
 
                     return true
@@ -137,7 +131,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun checkDisplayList(newText: String) {
-        if (displayList.isEmpty()) {
+        if (homeViewModel.searchDisplayList.isEmpty()) {
             binding.hintText.visibility = View.VISIBLE
             binding.hintText.text = getString(R.string.find_nothing, newText)
         } else {
@@ -146,9 +140,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun addToDisplayList(newText: String) {
-        allPollutionData.forEach {
+        homeViewModel.allPollutionData.forEach {
             if (it.siteName.contains(newText)) {
-                displayList.add(it)
+                homeViewModel.searchDisplayList.add(it)
             }
         }
     }
@@ -164,13 +158,13 @@ class HomeFragment : Fragment() {
         binding.hintText.visibility = View.GONE
         binding.verticalRecycler.visibility = View.VISIBLE
         binding.horizontalRecycler.visibility = View.VISIBLE
-        updateVerticalRecycler(downPollutionData)
+        updateVerticalRecycler(homeViewModel.downPollutionData)
     }
 
 
-    private fun showHint() {
-        displayList.clear()
-        updateVerticalRecycler(displayList)
+    private fun showDefaultHint() {
+        homeViewModel.searchDisplayList.clear()
+        updateVerticalRecycler(homeViewModel.searchDisplayList)
         binding.hintText.visibility = View.VISIBLE
         binding.hintText.text = getString(R.string.enter_site_name)
     }

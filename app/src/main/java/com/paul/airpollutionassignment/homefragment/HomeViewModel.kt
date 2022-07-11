@@ -13,6 +13,9 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel(private val airRepository: AirRepository) : ViewModel() {
 
+    var searchDisplayList = mutableListOf<Record>()
+
+    var allPollutionData = mutableListOf<Record>()
     private var _allData = MutableLiveData<List<Record>>()
     val allData: LiveData<List<Record>>
         get() = _allData
@@ -21,6 +24,7 @@ class HomeViewModel(private val airRepository: AirRepository) : ViewModel() {
     val upPollution: LiveData<List<Record>>
         get() = _upPollution
 
+    var downPollutionData = mutableListOf<Record>()
     private var _downPollution = MutableLiveData<List<Record>>()
     val downPollution: LiveData<List<Record>>
         get() = _downPollution
@@ -30,9 +34,7 @@ class HomeViewModel(private val airRepository: AirRepository) : ViewModel() {
         get() = _loadingComplete
 
 
-
-
-    fun getAirPollution(apiKey:String, limit:Int) {
+    fun getAirPollution(apiKey: String, limit: Int) {
         viewModelScope.launch {
             _loadingComplete.value = false
 
@@ -43,14 +45,14 @@ class HomeViewModel(private val airRepository: AirRepository) : ViewModel() {
                     val downList = mutableListOf<Record>()
                     _allData.value = data.records
 
-                    for(i in data.records){
+                    for (i in data.records) {
                         try {
-                            if(i.pmTwoPointFive.toInt()<AirApplication.THRESHOLD){
+                            if (i.pmTwoPointFive.toInt() < AirApplication.THRESHOLD) {
                                 upList.add(i)
-                            }else{
+                            } else {
                                 downList.add(i)
                             }
-                        }catch (e:Exception){
+                        } catch (e: Exception) {
 
                             Log.d("homeViewModel", "e = $e ")
                             Log.d("homeViewModel", "i = $i ")
